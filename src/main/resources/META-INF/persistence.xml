@@ -8,6 +8,8 @@
 
         <class>com.example.models.Employee</class>
         <class>com.example.models.Address</class>
+        <class>com.example.models.Author</class>
+        <class>com.example.models.Book</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
