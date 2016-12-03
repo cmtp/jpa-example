@@ -1,8 +1,11 @@
 package com.example.models;
 
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author ctola
@@ -25,13 +28,17 @@ public class Employee implements Serializable{
     private String lastname;
 
     @Column(name = "DATE")
-    private Date date;
+    private LocalDate date;
+
+    @OneToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "ADDRESSID")
+    private Address address;
 
     public Employee() {
 
     }
 
-    public Employee(Long code, String name, String lastname, Date date) {
+    public Employee(Long code, String name, String lastname, LocalDate date) {
         this.code = code;
         this.name = name;
         this.lastname = lastname;
@@ -62,19 +69,28 @@ public class Employee implements Serializable{
         this.lastname = lastname;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
     public String toString() {
-        return "Employee: {code: " + code +
+        return "Employee: { code: " + code +
                 ", name: " + name +
                 ", lastname: " + lastname +
-                ", date: " + date + "}";
+                ", date: " + date +
+                ", address: " + address + " }";
     }
 }

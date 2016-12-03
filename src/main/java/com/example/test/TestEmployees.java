@@ -1,12 +1,12 @@
 package com.example.test;
 
+import com.example.models.Address;
 import com.example.models.Employee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -21,22 +21,21 @@ public class TestEmployees {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         EntityManager manager = emf.createEntityManager();
-        insertInit();
-
-        printAll();
-
+        Employee e = new Employee(10L, "Pepito", "Perez", LocalDate.of(1979, 6, 6));
+        Address d = new Address(15L, "Fake Street, 123", "Springfield", "EEUU");
+        e.setAddress(d);
         manager.getTransaction().begin();
-        Employee e = manager.find(Employee.class, 10L);
-        e.setName("David");
-        e.setLastname("Lopez");
+        manager.persist(e);
         manager.getTransaction().commit();
+        manager.close();
 
         printAll();
+
     }
 
     private static void insertInit() {
         EntityManager manager = emf.createEntityManager();
-        Employee e = new Employee(10L, "Pepito", "Perez", new GregorianCalendar(1979, 6, 6).getTime());
+        Employee e = new Employee(10L, "Pepito", "Perez", LocalDate.of(1979, 6, 6));
         manager.getTransaction().begin();
         manager.persist(e);
         manager.getTransaction().commit();
