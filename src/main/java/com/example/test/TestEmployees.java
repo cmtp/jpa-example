@@ -15,29 +15,47 @@ import java.util.List;
 public class TestEmployees {
 
     //@PersistenceContext(unitName = "Persistence")
-    private static EntityManager manager;
 
-    private static EntityManagerFactory emf;
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("Persistence");
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
-        emf = Persistence.createEntityManagerFactory("Persistence");
-        manager = emf.createEntityManager();
+        EntityManager manager = emf.createEntityManager();
+        insertInit();
 
+        printAll();
+
+        manager.getTransaction().begin();
+        Employee e = manager.find(Employee.class, 10L);
+        e.setName("David");
+        e.setLastname("Lopez");
+        manager.getTransaction().commit();
+
+        printAll();
+    }
+
+    private static void insertInit() {
+        EntityManager manager = emf.createEntityManager();
         Employee e = new Employee(10L, "Pepito", "Perez", new GregorianCalendar(1979, 6, 6).getTime());
-        Employee e2 = new Employee(25L, "Jose", "Perez", new GregorianCalendar(1984, 6, 6).getTime());
-        Employee e3 = new Employee(30L, "Juan", "Perez", new GregorianCalendar(2000, 6, 6).getTime());
         manager.getTransaction().begin();
         manager.persist(e);
-        manager.persist(e2);
-        manager.persist(e3);
         manager.getTransaction().commit();
+        manager.close();
+
+        printAll();
+
+        manager = emf.createEntityManager();
+        manager.getTransaction().begin();
+        e.setName("Juan");
+        manager.getTransaction().commit();
+        manager.close();
 
         printAll();
     }
 
     @SuppressWarnings("unchecked")
     private static void printAll() {
+        EntityManager manager = emf.createEntityManager();
         List<Employee> emps = (List<Employee>) manager.createQuery("FROM Employee").getResultList();
         System.out.println("Exist " + emps.size() + " employees in the system.");
         for (Employee emp: emps) {
